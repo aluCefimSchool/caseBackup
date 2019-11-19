@@ -5,7 +5,7 @@ from app.forms import SignInForm
 ##
 # INDEX ROUTE
 ##
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     form = SignInForm()
 
