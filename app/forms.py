@@ -2,7 +2,6 @@ from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, validators
 from wtforms.validators import DataRequired
 from wtforms.fields.html5 import EmailField, DateField
-import os
 
 class SignInForm(FlaskForm):
     username = StringField('Username', [validators.DataRequired()])
