@@ -37,7 +37,7 @@ def signUp():
     else: 
         if "user" in session:
             flash(f"Vous êtes déja inscrit sur notre application !", "info")
-            return redirect(url_for("index"))
+            return redirect(url_for("dashboard"))
     
     return render_template('signup.html', title='Sign Up', form=form)
 
@@ -52,3 +52,18 @@ def logOut():
     
     session.pop("user", None)
     return redirect(url_for("index"))
+
+##
+# DASKBOARD ROUTE
+##
+@app.route('/dashboard')
+def dashboard():
+    if "user" in session:
+        user = session["user"]
+
+        #Return template index.html with data
+        return render_template('dashboard.html', title='Dashboard', user=user)
+    
+    else:
+        #Redirect to signin route
+        return redirect(url_for("index"))
