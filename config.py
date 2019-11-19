@@ -1,4 +1,9 @@
 import os
 
 class Config(object):
-    SECRET_KEY = os.environ.get('SECRET_KEY') or '''#2E'UKq6)+:PG[jW~,(Q$,D;H^u.'pf)2325/4tCE~f{>QQdDqtTTaA~KE"2BT/Dp'''
+    SECRET_KEY = os.environ.get('SECRET_KEY') 
+
+    RECAPTCHA_USE_SSL = False
+    RECAPTCHA_PRIVATE_KEY = os.environ.get('CAPTCHA_PRIVATE_KEY') 
+    RECAPTCHA_PUBLIC_KEY = os.environ.get('CAPTCHA_PUBLIC_KEY')
+    
