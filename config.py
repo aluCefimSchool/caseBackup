@@ -3,6 +3,14 @@ import os
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') 
 
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://case:case@localhost:8889/case'
+    
+    #SQLALCHEMY - CONFIG
+    SQLALCHEMY_POOL_RECYCLE = 90
+    SQLALCHEMY_POOL_TIMEOUT = 200
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    #GOOGLE RECAPTCHA
     RECAPTCHA_USE_SSL = False
     RECAPTCHA_PRIVATE_KEY = os.environ.get('CAPTCHA_PRIVATE_KEY') 
     RECAPTCHA_PUBLIC_KEY = os.environ.get('CAPTCHA_PUBLIC_KEY')
@@ -11,3 +19,5 @@ class Config(object):
     SESSION_COOKIE_HTTPONLY = True
     REMEMBER_COOKIE_HTTPONLY = True
     
+
+
