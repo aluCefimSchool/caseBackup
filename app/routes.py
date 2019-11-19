@@ -40,3 +40,15 @@ def signUp():
             return redirect(url_for("index"))
     
     return render_template('signup.html', title='Sign Up', form=form)
+
+##
+# LOGOUT ROUTE
+##
+@app.route('/logout')
+def logOut():
+    if "user" in session:
+        user = session["user"]
+        flash(f"Vous avez été déconnecté de l'application !", "info")
+    
+    session.pop("user", None)
+    return redirect(url_for("index"))
