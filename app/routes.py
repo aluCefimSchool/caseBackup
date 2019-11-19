@@ -1,9 +1,9 @@
 from flask import render_template, flash, redirect, request, session, url_for
 from app import app 
-from app.forms import SignInForm
+from app.forms import SignInForm, SignUpForm
 
 ##
-# INDEX ROUTE
+# INDEX / LOGIN ROUTE
 ##
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -15,7 +15,7 @@ def index():
         user = request.form
         session["user"] = user
         flash('Bienvenue à vous {}, remember_me={}'.format(form.username.data, form.remember_me.data, "info"))
-        return redirect(url_for('daskboard'))
+        return redirect(url_for('dashboard'))
     else:
         if "user" in session: 
             return redirect(url_for('dashboard'))
@@ -54,7 +54,7 @@ def logOut():
     return redirect(url_for("index"))
 
 ##
-# DASKBOARD ROUTE
+# DASHBOARD ROUTE
 ##
 @app.route('/dashboard')
 def dashboard():
@@ -63,6 +63,21 @@ def dashboard():
 
         #Return template index.html with data
         return render_template('dashboard.html', title='Dashboard', user=user)
+    
+    else:
+        #Redirect to signin route
+        return redirect(url_for("index"))
+
+##
+# PROFIL ROUTE
+##
+@app.route('/profil')
+def profil():
+    if "user" in session:
+        user = session["user"]
+
+        #Return template index.html with data
+        return render_template('profil.html', title='Profil', user=user)
     
     else:
         #Redirect to signin route
