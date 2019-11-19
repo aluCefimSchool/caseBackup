@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm, RecaptchaField
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, validators
+from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, validators
 from wtforms.validators import DataRequired
 from wtforms.fields.html5 import EmailField, DateField
 
@@ -20,7 +20,8 @@ class SignUpForm(FlaskForm):
         validators.DataRequired(), 
         validators.EqualTo('password', 'La donnée saisie ne correspond pas à votre mot de passe !')
     ])
-    # birthday = DateField('Date de naissance', [validators.DataRequired()])
+    promo_choice = SelectField('Promotion', choices=[('DW', 'Designer Web'), ('DWWM', 'Developpeur Web et Web Mobile')])
+    birthday = DateField('Date de naissance', [validators.DataRequired()])
     accept_tos = BooleanField('Termes d\'Utilisation', [validators.DataRequired()])
     recaptcha = RecaptchaField()
     submit = SubmitField('S\'enregistrer')
