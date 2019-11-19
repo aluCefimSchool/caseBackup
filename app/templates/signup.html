@@ -19,6 +19,16 @@
             {% endfor %}
         </p>
         <p>
+            {{ form.birthday.label }}<br>
+            {{ form.birthday(placeholder=form.birthday.label.text) }} 
+            {% for error in form.birthday.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.promo_choice }}
+        </p>
+        <p>
             {{ form.password.label }}<br>
             {{ form.password(placeholder=form.password.label.text) }} 
             {% for error in form.password.errors %}
@@ -39,9 +49,6 @@
         <p>
             {{ form.recaptcha }} 
         </p>
-        <div>
-          
-        </div>
         <p>{{ form.submit() }}</p>
     </form>
 {% endblock %}

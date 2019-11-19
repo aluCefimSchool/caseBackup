@@ -1,6 +1,10 @@
 from flask import render_template, flash, redirect, request, session, url_for
+from flask_login import current_user, login_user
+
 from app import app 
 from app.forms import SignInForm, SignUpForm
+from app.models import User
+
 
 ##
 # INDEX / LOGIN ROUTE
@@ -9,6 +13,9 @@ from app.forms import SignInForm, SignUpForm
 def index():
     form = SignInForm()
 
+    #IF USER CONNECTED REDIRECT TO DASHBOARD
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     #Send form if condictions = OK and redirect
     if request.method == 'POST' and form.validate_on_submit():
         session.permanent = True
@@ -16,6 +23,15 @@ def index():
         session["user"] = user
         flash('Bienvenue à vous {}, remember_me={}'.format(form.username.data, form.remember_me.data, "info"))
         return redirect(url_for('dashboard'))
+
+        found_user = users.query.filter_by(name = user).first()
+        if found_user:
+            session["email"] = found_user.email
+        else:
+            usr = users(user, "")
+            db.session.add(usr)
+            db.session.commit()
+
     else:
         if "user" in session: 
             return redirect(url_for('dashboard'))
@@ -76,8 +92,15 @@ def profil():
     if "user" in session:
         user = session["user"]
 
+        if request.method == "POST" and form.validate_on_submit():
+            email = request.form["email"]
+            session["email"] = email
+        else:
+            if "email" in session:
+                email = session["email"]
+
         #Return template index.html with data
-        return render_template('profil.html', title='Profil', user=user)
+        return render_template('profil.html', title='Profil', email=email)
     
     else:
         #Redirect to signin route
