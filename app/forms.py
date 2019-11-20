@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, validators
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 from wtforms.fields.html5 import EmailField, DateField
+from app.models import User
 
 class SignInForm(FlaskForm):
     username = StringField('Username', [validators.DataRequired()])
@@ -20,8 +21,18 @@ class SignUpForm(FlaskForm):
         validators.DataRequired(), 
         validators.EqualTo('password', 'La donnée saisie ne correspond pas à votre mot de passe !')
     ])
-    promo_choice = SelectField('Promotion', choices=[('DW', 'Designer Web'), ('DWWM', 'Developpeur Web et Web Mobile')])
+    # promo_choice = SelectField('Promotion', choices=[('DW', 'Designer Web'), ('DWWM', 'Developpeur Web et Web Mobile')])
     birthday = DateField('Date de naissance', [validators.DataRequired()])
     accept_tos = BooleanField('Termes d\'Utilisation', [validators.DataRequired()])
     recaptcha = RecaptchaField()
     submit = SubmitField('S\'enregistrer')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError('Veuillez utilser une nom d\'utilisateur différent !')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is not None:
+            raise ValidationError('Veuillez utiliser une adresse mail différente !')
