@@ -19,14 +19,25 @@
             {% endfor %}
         </p>
         <p>
+            {{ form.username.label }}<br>
+            {{ form.username(placeholder=form.username.label.text) }} 
+            {% for error in form.username.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+         </p>
+         <p>
             {{ form.birthday.label }}<br>
             {{ form.birthday(placeholder=form.birthday.label.text) }} 
             {% for error in form.birthday.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </p>
-        <p>
-            {{ form.promo_choice }}
+         <p>
+            {{ form.email.label }}<br>
+            {{ form.email(placeholder=form.email.label.text) }} 
+            {% for error in form.email.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
         </p>
         <p>
             {{ form.password.label }}<br>
