@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, login_required, logout_user
 from app import app 
 from app import db
 from app.forms import SignInForm, SignUpForm
-from app.models import User
+from app.models import User, Promotion
 
 
 ##
@@ -61,7 +61,9 @@ def index():
 @app.route('/signup', methods=['GET', 'POST'])
 def signUp():
     form = SignUpForm()
-    
+    form.promo_choice.choices = [(promotion.id_promotion, promotion.code) for promotion in Promotion.query.all()]
+    flash(form.promo_choice.data)
+
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
         flash(f"Vous êtes déja inscrit sur notre application !", "info")
@@ -70,7 +72,10 @@ def signUp():
     if request.method == 'POST' and form.validate_on_submit():
         user = User(lastname = form.lastname.data, firstname = form.firstname.data, username=form.username.data, email=form.email.data, birthday=form.birthday.data)
         user.set_password(form.password.data)
+        promotion = Promotion.query.filter_by(id_promotion = form.promo_choice.data).first()
+                    
         db.session.add(user)
+        promotion.promotions.append(user)
         db.session.commit()
         flash('Votre inscription a été prit en compte {}. Veuillez vérifier vos email pour confirmer votre inscription'.format(form.username.data, "info"))
         return redirect(url_for('index'))
@@ -106,9 +111,6 @@ def dashboard():
 @app.route('/profil')
 @login_required
 def profil():
-    if "user" in session:
-        user = session["user"]
-
         if request.method == "POST" and form.validate_on_submit():
             email = request.form["email"]
             session["email"] = email
@@ -117,8 +119,4 @@ def profil():
                 email = session["email"]
 
         #Return template index.html with data
-        return render_template('profil.html', title='Profil', email=email)
-    
-    else:
-        #Redirect to signin route
-        return redirect(url_for("index"))
+        return render_template('profil.html', title='Profil')
