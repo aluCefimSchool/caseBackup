@@ -23,7 +23,7 @@ class User(UserMixin,db.Model):
     promotion = db.relationship('Promotion', secondary=user_promotion, backref=db.backref('promotions', lazy = 'dynamic'))
 
     def get_id(self):
-        return (self.id_user)
+        return self.id_user
 
     def __repr__(self):
         return '<User {}>'.format(self.firstname, self.lastname, self.username, self.email, self.birthday)    
@@ -40,5 +40,53 @@ class Promotion(db.Model):
     promotion = db.Column(db.String(45), index=True, unique=True, nullable=False)
 
     def __repr__(self):
-        return '<Promotion {}>'.format(self.promotion)   
+        return '<Promotion {}>'.format(self.promotion)
+
+class QuestionAlpha(db.Model):
+    id_question = db.Column(db.Integer, primary_key=True)
+    question_alpha = db.Column(db.String(255), index=True, unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<QuestionAlpha {}>'.format(self.question_alpha)
+
+class QuestionNum(db.Model):
+    id_question = db.Column(db.Integer, primary_key=True)
+    question_num = db.Column(db.String(255), index=True, unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<QuestionNum {}>'.format(self.question_num)
+
+class ReponseNum(db.Model):
+    id_reponse = db.Column(db.Integer, primary_key=True)
+    reponse_num = db.Column(db.String(255), index=True, unique=True, nullable=False)
+    id_question = db.Column(db.Integer, index=True, unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<ReponseNum {}>'.format(self.reponse_num)
+
+class ReponseAlpha(db.Model):
+    id_reponse = db.Column(db.Integer, primary_key=True)
+    reponse_alpha = db.Column(db.String(255), index=True, unique=True, nullable=False)
+    id_question = db.Column(db.Integer, index=True, unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<ReponseAlpha {}>'.format(self.reponse_alpha)
+
+class Form(db.Model):
+    id_form = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column(db.String(45), index=True, unique=True, nullable=False)
+    lastname = db.Column(db.String(45), index=True, unique=True, nullable=False)
+    id_promotion = db.Column(db.Integer, index=True, unique=True, nullable=False)
+    release_date = db.Column(db.Date)
+    update_date = db.Column(db.Date)
+
+    def __repr__(self):
+        return '<Form {}>'.format(self.firstname, self.lastname, self.username, self.email, self.birthday)
+
+    def release(self):
+        return '<Form {}>'.format(self.release_date)
+
+    def update(self):
+        return '<Form {}>'.format(self.update_date)
+
 

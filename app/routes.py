@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, login_required, logout_user
 from app import app 
 from app import db
 from app.forms import SignInForm, SignUpForm
-from app.models import User, Promotion
+from app.models import User, Promotion, QuestionAlpha, QuestionNum, ReponseNum, ReponseAlpha, Form
 
 
 ##
@@ -120,3 +120,52 @@ def profil():
 
         #Return template index.html with data
         return render_template('profil.html', title='Profil')
+
+
+##
+# POPULARITY_GRAPH ROUTE
+##
+@app.route('/popularity')
+@login_required
+def popularity():
+    if current_user.is_authenticated:
+        # Return template popularity.html with data
+        return render_template('popularity.html', title='Popularity')
+
+    else:
+        # Redirect to dashboard route
+        return redirect(url_for("dashboard"))
+
+##
+# PERFORMANCE_GRAPH ROUTE
+##
+@app.route('/performance')
+@login_required
+def performance():
+    if current_user.is_authenticated:
+        # Return template performance.html with data
+        return render_template('performance.html', title='Performance')
+
+    else:
+        # Redirect to dashboard route
+        return redirect(url_for("dashboard"))
+
+
+##
+# SCORE_GRAPH ROUTE
+##
+@app.route('/score')
+@login_required
+def score():
+    if current_user.is_authenticated:
+        forms = [(form.id_form, form.firstname, form.id_promotion) for form in Form.query.all()]
+        questionAlphas = [(questionAlpha.id_question, questionAlpha.question) for questionAlpha in QuestionAlpha.query.all()]
+        questionNums = [(questionNum.id_question, questionNum.question) for questionNum in QuestionNum.query.all()]
+        forms = [(form.id_form, form.firstname, form.id_promotion) for form in Form.query.all()]
+        # Return template score.html with data
+        return render_template('score.html', title='Score', forms=forms, questionAlphas=questionAlphas, )
+
+    else:
+        # Redirect to dashboard route
+        return redirect(url_for("dashboard"))
+
