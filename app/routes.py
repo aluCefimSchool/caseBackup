@@ -1,11 +1,12 @@
-from flask import render_template, flash, redirect, request, session, url_for
+from flask import render_template, flash, redirect, request, session, url_for, jsonify
 from flask_login import current_user, login_user, login_required, logout_user
 
 from app import app 
 from app import db
 from app.forms import SignInForm, SignUpForm
-from app.models import User, Promotion, QuestionAlpha, QuestionNum, ReponseNum, ReponseAlpha, Form
+from app.models import User, Promotion, QuestionAlphabetic, QuestionNumeric, ResponseNumeric, ResponseAlphabetic, Form
 
+import gviz_api
 
 ##
 # INDEX / LOGIN ROUTE
@@ -158,12 +159,47 @@ def performance():
 @login_required
 def score():
     if current_user.is_authenticated:
+
+        description = {"name": ("string", "Name"),
+                       "salary": ("number", "Salary"),
+                       "full_time": ("boolean", "Full Time Employee")}
+        data = [{"name": "Mike", "salary": (10000, "$10,000"), "full_time": True},
+                {"name": "Jim", "salary": (800, "$800"), "full_time": False},
+                {"name": "Alice", "salary": (12500, "$12,500"), "full_time": True},
+                {"name": "Bob", "salary": (7000, "$7,000"), "full_time": True}]
+
+        # Loading it into gviz_api.DataTable
+        data_table = gviz_api.DataTable(description)
+        data_table.LoadData(data)
+
+        testJson = data_table.ToJSonResponse(columns_order=("name", "salary", "full_time"),
+                                  order_by="salary")
+
+        # Create a JavaScript code string.
+        jscode = data_table.ToJSCode("jscode_data",
+                                     columns_order=("name", "salary", "full_time"),
+                                     order_by="salary")
+
+        # Create a JSON string.
+        json = data_table.ToJSonResponse(columns_order=("name", "salary", "full_time"),
+                                 order_by="salary")
         forms = [(form.id_form, form.firstname, form.id_promotion) for form in Form.query.all()]
-        questionAlphas = [(questionAlpha.id_question, questionAlpha.question) for questionAlpha in QuestionAlpha.query.all()]
-        questionNums = [(questionNum.id_question, questionNum.question) for questionNum in QuestionNum.query.all()]
-        forms = [(form.id_form, form.firstname, form.id_promotion) for form in Form.query.all()]
+        questionAlphas = [(questionAlphabetic.id_question, questionAlphabetic.question) for questionAlphabetic in QuestionAlphabetic.query.all()]
+        questionNums = [(questionNumeric.id_question, questionNumeric.question) for questionNumeric in QuestionNumeric.query.all()]
+        responseAlphas = [(responseAlphabetic.id_reponse, responseAlphabetic.response, responseAlphabetic.id_question) for responseAlphabetic in ResponseAlphabetic.query.all()]
+        responseNums = [(responseNumeric.id_reponse, responseNumeric.response, responseNumeric.id_question) for responseNumeric in ResponseNumeric.query.all()]
         # Return template score.html with data
-        return render_template('score.html', title='Score', forms=forms, questionAlphas=questionAlphas, )
+
+
+        return render_template('score.html',
+                               title='Score',
+                               forms=forms,
+                               questionAlphas=questionAlphas,
+                               questionNums=questionNums,
+                               reponseNums=testJson,
+                               responseAlphas=responseAlphas,
+                               data_table=json,
+                               data_table_json=jscode)
 
     else:
         # Redirect to dashboard route

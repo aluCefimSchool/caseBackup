@@ -42,31 +42,31 @@ class Promotion(db.Model):
     def __repr__(self):
         return '<Promotion {}>'.format(self.promotion)
 
-class QuestionAlpha(db.Model):
+class QuestionAlphabetic(db.Model):
     id_question = db.Column(db.Integer, primary_key=True)
-    question_alpha = db.Column(db.String(255), index=True, unique=True, nullable=False)
+    question = db.Column(db.String(255), index=True, unique=True, nullable=False)
 
     def __repr__(self):
         return '<QuestionAlpha {}>'.format(self.question_alpha)
 
-class QuestionNum(db.Model):
+class QuestionNumeric(db.Model):
     id_question = db.Column(db.Integer, primary_key=True)
-    question_num = db.Column(db.String(255), index=True, unique=True, nullable=False)
+    question = db.Column(db.String(255), index=True, unique=True, nullable=False)
 
     def __repr__(self):
         return '<QuestionNum {}>'.format(self.question_num)
 
-class ReponseNum(db.Model):
+class ResponseNumeric(db.Model):
     id_reponse = db.Column(db.Integer, primary_key=True)
-    reponse_num = db.Column(db.String(255), index=True, unique=True, nullable=False)
+    response = db.Column(db.String(255), index=True, unique=True, nullable=False)
     id_question = db.Column(db.Integer, index=True, unique=True, nullable=False)
 
     def __repr__(self):
         return '<ReponseNum {}>'.format(self.reponse_num)
 
-class ReponseAlpha(db.Model):
+class ResponseAlphabetic(db.Model):
     id_reponse = db.Column(db.Integer, primary_key=True)
-    reponse_alpha = db.Column(db.String(255), index=True, unique=True, nullable=False)
+    response = db.Column(db.String(255), index=True, unique=True, nullable=False)
     id_question = db.Column(db.Integer, index=True, unique=True, nullable=False)
 
     def __repr__(self):
