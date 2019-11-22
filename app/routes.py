@@ -6,7 +6,7 @@ from app import db
 from app.forms import SignInForm, SignUpForm
 from app.models import User, Promotion, QuestionAlphabetic, QuestionNumeric, ResponseNumeric, ResponseAlphabetic, Form
 
-import gviz_api
+# import gviz_api
 
 ##
 # INDEX / LOGIN ROUTE
@@ -36,26 +36,6 @@ def index():
     return render_template('signin.html', title='Sign In', form=form)
 
 
-    #     session.permanent = True
-    #     user = request.form
-    #     session["user"] = user
-    #     flash('Bienvenue à vous {}, remember_me={}'.format(form.username.data, form.remember_me.data, "info"))
-    #     return redirect(url_for('dashboard'))
-
-    #     found_user = users.query.filter_by(name = user).first()
-    #     if found_user:
-    #         session["email"] = found_user.email
-    #     else:
-    #         usr = users(user, "")
-    #         db.session.add(usr)
-    #         db.session.commit()
-
-    # else:
-    #     if "user" in session: 
-    #         return redirect(url_for('dashboard'))
-        
-   
-
 ##
 # SIGNUP ROUTE
 ##
@@ -63,7 +43,6 @@ def index():
 def signUp():
     form = SignUpForm()
     form.promo_choice.choices = [(promotion.id_promotion, promotion.code) for promotion in Promotion.query.all()]
-    flash(form.promo_choice.data)
 
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
@@ -96,7 +75,6 @@ def logOut():
 # DASHBOARD ROUTE
 ##
 @app.route('/dashboard')
-@login_required
 def dashboard():
     if current_user.is_authenticated:
         #Return template index.html with data
@@ -110,7 +88,6 @@ def dashboard():
 # PROFIL ROUTE
 ##
 @app.route('/profil')
-@login_required
 def profil():
         if request.method == "POST" and form.validate_on_submit():
             email = request.form["email"]
@@ -127,7 +104,6 @@ def profil():
 # POPULARITY_GRAPH ROUTE
 ##
 @app.route('/popularity')
-@login_required
 def popularity():
     if current_user.is_authenticated:
         # Return template popularity.html with data
@@ -141,7 +117,6 @@ def popularity():
 # PERFORMANCE_GRAPH ROUTE
 ##
 @app.route('/performance')
-@login_required
 def performance():
     if current_user.is_authenticated:
         # Return template performance.html with data
@@ -156,7 +131,6 @@ def performance():
 # SCORE_GRAPH ROUTE
 ##
 @app.route('/score')
-@login_required
 def score():
     if current_user.is_authenticated:
 
